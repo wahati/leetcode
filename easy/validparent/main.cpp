@@ -7,53 +7,39 @@ bool validparent(string);
 
 int main() {
     cout << validparent("()[]{}") << endl;
-    cout << validparent("([)]") << endl;
-    cout << validparent("{[]}") << endl;
-    cout << validparent("(]") << endl;
-    cout << validparent("}") << endl;
     return 0;
 }
 
 bool validparent(string s) {
-    if (s.length() & 1)
-        return false;
-    int counter = 0;
-    int offset = 1;
-    for (int i = 1; i < s.length(); i++) {
+    stack<char> parenthesis;
+    for (int i = 0; i < s.length(); i++) {
         switch (s[i]) {
             case '(':
             case '[':
             case '{':
-                offset = 1;
+                parenthesis.push(s[i]);
                 break;
             case ')':
-                if (s[i-offset] == '(') {
-                    counter+= 2;
-                    offset += 2;
+                if (!parenthesis.empty()&&parenthesis.top() == '(') {
+                    parenthesis.pop();
                     break;
-                } else {
-                    return false;
                 }
+                return false;
             case ']':
-                if (s[i-offset] == '[') {
-                    counter+= 2;
-                    offset += 2;
+                if (!parenthesis.empty()&&parenthesis.top() == '[') {
+                    parenthesis.pop();
                     break;
-                } else {
-                    return false;
                 }
+                return false;
             case '}':
-                if (s[i-offset] == '{') {
-                    counter+= 2;
-                    offset += 2;
+                if (!parenthesis.empty()&&parenthesis.top() == '{') {
+                    parenthesis.pop();
                     break;
-                } else {
-                    return false;
                 }
+                return false;
         }
     }
-    if (counter == s.length()) {
+    if (parenthesis.empty())
         return true;
-    }
     return false;
 }
